@@ -28,13 +28,22 @@
                 const htmlContent = event.target.result;
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(htmlContent, 'text/html');
-                const buttons = doc.querySelectorAll('button.download-btn');
+                const rows = doc.querySelectorAll('tr');
                 
                 let output = '';
-                buttons.forEach(button => {
-                    const link = button.getAttribute('onclick').split("'")[1];
-                    const text = button.closest('tr').querySelector('td').innerText.trim();
-                    output += `${text} ${link}\n`;
+                rows.forEach(row => {
+                    const downloadBtn = row.querySelector('button.download-btn');
+                    const pdfBtn = row.querySelector('button.pdf-btn');
+                    if (downloadBtn) {
+                        const downloadLink = downloadBtn.getAttribute('onclick').split("'")[1];
+                        const text = row.querySelector('td').innerText.trim();
+                        output += `${text} ${downloadLink}\n`;
+                    }
+                    if (pdfBtn) {
+                        const pdfLink = pdfBtn.getAttribute('onclick').split("'")[1];
+                        const text = row.querySelector('td').innerText.trim();
+                        output += `${text} ${pdfLink}\n`;
+                    }
                 });
                 
                 const blob = new Blob([output], { type: 'text/plain' });
